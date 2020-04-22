@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#"><img src="/static/logo.png" width="230px"></a>
+      <ul class="navbar-nav mr-auto">
+      </ul>
+      <form action="/logout" method="POST">
+        <button type="submit" class="btn btn-sm btn-outline-danger">ログアウト</button>
+        [[ .csrfField ]]
+      </form>
+    </nav>
+    <div id="app" class="container">
+      <br>
+
+      <div>
+        <form class="form-inline row">
+          <div class="btn-group btn-group-toggle col-md-2" data-toggle="buttons">
+            <label v-for="label in statusOptions" class="btn btn-sm btn-outline-secondary" :class="{active: searchState === label.value}">
+              <input type="radio" v-model="searchState" :value="label.value">{{ labels[label.value] }}
+            </label>
+          </div>
+          <input type="text" class="form-control form-control-sm col-md-4" placeholder="TODOを検索" v-model="searchQuery">
+          <button type="reset" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;">
+            <i class="fa fa-times"></i>
+          </button>
+        </form>
+      </div>
+
+      <br>
+
+      <div>
+        <form class="form-inline row" @submit.prevent="addTask">
+          <input type="text" class="form-control form-control-sm col-md-4" ref="title" placeholder="TODOを入力">
+          <input type="submit" class="btn btn-sm btn-danger col-md-1" value="完了を削除">
+        </form>
+
+        <br>
+
+        <ul class="list-unstyled">
+          <li v-for="task in tasks" v-bind:key="task.id">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" :id="checkboxId(task.id)" v-model="task.state" @change="updateTask(task)">
+              <label class="custom-control-label" :for="checkboxId(task.id)" :class="{done: task.state == 1}">{{ task.title }}</label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>

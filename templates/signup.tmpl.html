@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/static/signup.css">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+  </head>
+  <body>
+    <form class="form-signin" action="/signup" method="POST">
+  		<img class="mb-4" src="/static/logo.png" alt="ロゴ">
+  		<h1 class="h3 mb-3 font-weight-normal">ユーザ登録</h1>
+      [[ if .messages ]]
+        <div class="alert alert-danger" role="alert">
+          <ul class="list-unstyled">
+            [[ range .messages ]]
+            <li><small><strong>[[ . ]]</strong></small></li>
+            [[ end ]]
+          </ul>
+        </div>
+      [[ end ]]
+  		<label for="inputEmail" class="sr-only">メールアドレス</label>
+      <input type="email" name="email" id="inputEmail" class="form-control" placeholder="メールアドレス" value="[[ .email ]]" required autofocus>
+  		<label for="inputPassword" class="sr-only">パスワード</label>
+  		<input type="password" name="password" id="inputPassword" class="form-control" placeholder="パスワード" required>
+  		<label for="inputConfirmPassword" class="sr-only">パスワード再入力</label>
+  		<input type="password" name="passwordConfirm" id="inputConfirmPassword" class="form-control" placeholder="パスワード再入力" required>
+  		<button class="btn btn-lg btn-primary btn-block" type="submit">登録</button>
+      <a href="/login">ログインはこちらから</a>
+  		<p class="mt-5 mb-3 text-muted">&copy; twinbird</p>
+      [[ .csrfField ]]
+		</form>
+  </body>
+</html>

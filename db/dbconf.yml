@@ -1,0 +1,22 @@
+
+test:
+    driver: postgres
+    open: user=vagrant dbname=todo_app sslmode=disable
+
+development:
+    driver: postgres
+    open: user=vagrant dbname=todo_app sslmode=disable
+    
+production:
+    driver: postgres
+    open: user=vagrant dbname=todo_app sslmode=disable
+
+customimport:
+    driver: customdriver
+    open: customdriver open
+    import: github.com/custom/driver
+    dialect: mysql
+
+environment_variable_config:
+    driver: $DB_DRIVER
+    open: $DATABASE_URL

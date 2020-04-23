@@ -30,13 +30,7 @@ type TasksResponse struct {
 }
 
 func taskGetHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, SessionName)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	user_id := session.Values["user_id"].(int)
+	user_id := r.Context().Value(ContextUserIdKey).(int)
 
 	q := r.FormValue("q")
 	state, err := strconv.Atoi(r.FormValue("state"))
@@ -73,17 +67,11 @@ type CreateResponse struct {
 }
 
 func taskPostHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, SessionName)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	user_id := session.Values["user_id"].(int)
+	user_id := r.Context().Value(ContextUserIdKey).(int)
 
 	title := r.FormValue("title")
 	t := &Task{Title: title, UserId: user_id, CreatedAt: time.Now()}
-	err = t.Create()
+	err := t.Create()
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -111,13 +99,7 @@ type UpdateResponse struct {
 }
 
 func taskPutHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, SessionName)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	user_id := session.Values["user_id"].(int)
+	user_id := r.Context().Value(ContextUserIdKey).(int)
 
 	params := mux.Vars(r)
 	task_id, err := strconv.Atoi(params["id"])
@@ -162,13 +144,7 @@ type RemoveResponse struct {
 }
 
 func taskDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	session, err := sessionStore.Get(r, SessionName)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	user_id := session.Values["user_id"].(int)
+	user_id := r.Context().Value(ContextUserIdKey).(int)
 
 	ids, err := removeDoneTask(user_id)
 	if err != nil {

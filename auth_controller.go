@@ -51,8 +51,8 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		session.Values["authenticated"] = true
-		session.Values["user_id"] = id
+		session.Values[SessionAuthenticatedKey] = true
+		session.Values[SessionUserIdKey] = id
 		err = session.Save(r, w)
 		if err != nil {
 			log.Printf("auth: session save %v\n", err)
@@ -115,8 +115,8 @@ func signupPostHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	session.Values["authenticated"] = true
-	session.Values["user_id"] = user_id
+	session.Values[SessionAuthenticatedKey] = true
+	session.Values[SessionUserIdKey] = user_id
 	err = session.Save(r, w)
 	if err != nil {
 		log.Println(err)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"html/template"
 	"log"
@@ -15,10 +16,15 @@ import (
 )
 
 const (
-	SessionName        = "vue-go-todo-app"
+	SessionName             = "vue-go-todo-app"
+	SessionAuthenticatedKey = "SessionAuthenticatedKey"
+	SessionUserIdKey        = "SessionUserIdKey"
+
 	LoginPageTemplate  = "login.tmpl.html"
 	SignupPageTemplate = "signup.tmpl.html"
 	AppPageTemplate    = "app.tmpl.html"
+
+	ContextUserIdKey = "ContextUserIdKey"
 )
 
 var (
@@ -109,20 +115,23 @@ func executeTemplate(w http.ResponseWriter, name string, data interface{}) {
 	}
 }
 
-func isLoggedIn(r *http.Request) (bool, error) {
+func getAuthInfo(r *http.Request) (bool, int, error) {
 	session, err := sessionStore.Get(r, SessionName)
 	if err != nil {
-		return false, err
+		return false, 0, err
 	}
-	if session.Values["authenticated"] == nil || session.Values["authenticated"].(bool) == false {
-		return false, nil
-	} else {
-		return true, nil
+	if session.Values[SessionAuthenticatedKey] == nil || session.Values[SessionAuthenticatedKey].(bool) == false {
+		return false, 0, nil
 	}
+	if session.Values[SessionUserIdKey] == nil {
+		return false, 0, nil
+	}
+	user_id := session.Values[SessionUserIdKey].(int)
+	return true, user_id, nil
 }
 
 func redirectToAppIfLoggedIn(w http.ResponseWriter, r *http.Request) bool {
-	ok, err := isLoggedIn(r)
+	ok, _, err := getAuthInfo(r)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -137,7 +146,7 @@ func redirectToAppIfLoggedIn(w http.ResponseWriter, r *http.Request) bool {
 
 func authRequiredHandler(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		ok, err := isLoggedIn(r)
+		ok, uid, err := getAuthInfo(r)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "unauthorized. You need login from '/login'", http.StatusUnauthorized)
@@ -147,6 +156,7 @@ func authRequiredHandler(fn http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "unauthorized. You need login from '/login'", http.StatusUnauthorized)
 			return
 		}
-		fn(w, r)
+		ctx := context.WithValue(r.Context(), ContextUserIdKey, uid)
+		fn(w, r.WithContext(ctx))
 	}
 }

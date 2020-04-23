@@ -28,11 +28,11 @@
               <input type="radio" v-model="searchState" :value="label.value">{{ labels[label.value] }}
             </label>
           </div>
-          <input type="text" class="form-control form-control-sm col-md-2" placeholder="TODOを検索" v-model="searchQuery">
-          <button type="reset" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;">
+          <input type="text" class="form-control form-control-sm col-md-2" placeholder="検索" v-model="searchQuery">
+          <button type="reset" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;" @click="resetSearchQuery()">
             <i class="fa fa-times"></i>
           </button>
-          <input type="submit" class="btn btn-sm btn-danger col-md-1 ml-md-3" value="完了を削除">
+          <input type="submit" class="btn btn-sm btn-danger col-md-1 ml-md-3" value="完了を削除" @click.prevent="removeDoneTask()">
         </form>
       </div>
 

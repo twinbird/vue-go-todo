@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	StateAll = -1
-	StateYet = 0
-	StateDone
+	StateAll  = -1
+	StateYet  = 0
+	StateDone = 1
 )
 
 type Task struct {
@@ -131,4 +131,49 @@ func getTasks(uid int, state int, q string) ([]Task, error) {
 		tasks = append(tasks, task)
 	}
 	return tasks, nil
+}
+
+func removeDoneTask(uid int) ([]int, error) {
+	rows, err := db.Query(`
+		SELECT
+			 id
+		FROM
+			tasks
+		WHERE
+			user_id = $1
+		AND
+			state = $2
+		ORDER BY
+			id ASC
+	`, uid, StateDone)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ids []int
+	for rows.Next() {
+		var id int
+		err := rows.Scan(&id)
+		if err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+
+	_, err = db.Exec(`
+	DELETE
+	FROM
+		tasks
+	WHERE
+		user_id = $1
+	AND
+		state = $2
+	`, uid, StateDone)
+	if err != nil {
+		return nil, err
+	}
+
+	return ids, nil
 }

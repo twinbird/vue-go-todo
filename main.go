@@ -67,6 +67,7 @@ func main() {
 	r.HandleFunc("/app", authRequiredHandler(appGetHandler)).Methods("GET")
 	r.HandleFunc("/app/tasks", authRequiredHandler(taskGetHandler)).Methods("GET")
 	r.HandleFunc("/app/tasks", authRequiredHandler(taskPostHandler)).Methods("POST")
+	r.HandleFunc("/app/tasks", authRequiredHandler(taskDeleteHandler)).Methods("DELETE")
 	r.HandleFunc("/app/tasks/{id}", authRequiredHandler(taskPutHandler)).Methods("PUT")
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 

@@ -155,3 +155,34 @@ func taskPutHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(b)
 }
+
+type RemoveResponse struct {
+	OwnerId       int   `json:"owner_id"`
+	RemovedTaskId []int `json:"removed_task_id"`
+}
+
+func taskDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	session, err := sessionStore.Get(r, SessionName)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	user_id := session.Values["user_id"].(int)
+
+	ids, err := removeDoneTask(user_id)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	res := &RemoveResponse{OwnerId: user_id, RemovedTaskId: ids}
+	b, err := json.Marshal(res)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}

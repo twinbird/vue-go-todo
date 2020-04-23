@@ -1,5 +1,5 @@
 const TaskState = {
-	Working: 0,
+	Yet: 0,
 	Done: 1
 }
 const csrfToken = document.getElementsByName("gorilla.csrf.Token")[0].value
@@ -24,6 +24,9 @@ const app = new Vue({
 		checkboxId(id) {
 			return "checkbox-" + id
 		},
+		resetSearchQuery() {
+			this.searchQuery = ''
+		},
 		addTask(event, value) {
 			const title = this.$refs.title
 			if (!title.value.length) {
@@ -31,7 +34,7 @@ const app = new Vue({
 			}
 			const params = new URLSearchParams()
 			params.append('title', title.value)
-			params.append('state', TaskState.Working)
+			params.append('state', TaskState.Yet)
 			axiosClient.post('/app/tasks', params)
 			.then((res) => {
 				this.tasks.push({
@@ -57,7 +60,7 @@ const app = new Vue({
 			if (task.state) {
 				params.append('state', TaskState.Done)
 			} else {
-				params.append('state', TaskState.Working)
+				params.append('state', TaskState.Yet)
 			}
 			axiosClient.put('/app/tasks/' + task.id, params)
 			.catch((err) => {
@@ -82,6 +85,21 @@ const app = new Vue({
 						title: e.title
 					})
 				})
+			})
+			.catch((err) => {
+				console.log(err)
+				if (err.response.status === 401) {
+					location.href = "/login"
+					alert("ログアウトしています。もう一度ログインしてください。")
+					return
+				}
+				alert("通信エラーが発生しました。もう一度画面を開き直してみてください")
+			})
+		},
+		removeDoneTask() {
+			axiosClient.delete('/app/tasks')
+			.then((res) => {
+				this.searchTask(this.searchState, this.searchQuery)
 			})
 			.catch((err) => {
 				console.log(err)

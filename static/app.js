@@ -46,7 +46,7 @@ const app = new Vue({
 			})
 			.catch((err) => {
 				console.log(err)
-				if (err.response.status === 401) {
+				if (err.response && err.response.status === 401) {
 					location.href = "/login"
 					alert("ログアウトしています。もう一度ログインしてください。")
 					return
@@ -65,7 +65,7 @@ const app = new Vue({
 			axiosClient.put('/app/tasks/' + task.id, params)
 			.catch((err) => {
 				console.log(err)
-				if (err.response.status === 401) {
+				if (err.response && err.response.status === 401) {
 					location.href = "/login"
 					alert("ログアウトしています。もう一度ログインしてください。")
 					return
@@ -88,7 +88,7 @@ const app = new Vue({
 			})
 			.catch((err) => {
 				console.log(err)
-				if (err.response.status === 401) {
+				if (err.response && err.response.status === 401) {
 					location.href = "/login"
 					alert("ログアウトしています。もう一度ログインしてください。")
 					return
@@ -103,7 +103,7 @@ const app = new Vue({
 			})
 			.catch((err) => {
 				console.log(err)
-				if (err.response.status === 401) {
+				if (err.response && err.response.status === 401) {
 					location.href = "/login"
 					alert("ログアウトしています。もう一度ログインしてください。")
 					return

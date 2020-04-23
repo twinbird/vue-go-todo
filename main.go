@@ -49,7 +49,7 @@ func main() {
 	defer sessionStore.Close()
 
 	// connect to postgres
-	db, err = sql.Open("postgres", "user=root dbname=todo_app password=root sslmode=disable")
+	db, err = sql.Open("postgres", "host=postgres user=root dbname=todo_app password=root sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -139,11 +139,11 @@ func authRequiredHandler(fn http.HandlerFunc) http.HandlerFunc {
 		ok, err := isLoggedIn(r)
 		if err != nil {
 			log.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, "unauthorized. You need login from '/login'", http.StatusUnauthorized)
 			return
 		}
 		if !ok {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Error(w, "unauthorized. You need login from '/login'", http.StatusUnauthorized)
 			return
 		}
 		fn(w, r)

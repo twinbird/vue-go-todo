@@ -43,6 +43,11 @@ const app = new Vue({
 			})
 			.catch((err) => {
 				console.log(err)
+				if (err.response.status === 401) {
+					location.href = "/login"
+					alert("ログアウトしています。もう一度ログインしてください。")
+					return
+				}
 				alert("通信エラーが発生しました。もう一度やり直してみてください。")
 			})
 		},
@@ -57,6 +62,11 @@ const app = new Vue({
 			axiosClient.put('/app/tasks/' + task.id, params)
 			.catch((err) => {
 				console.log(err)
+				if (err.response.status === 401) {
+					location.href = "/login"
+					alert("ログアウトしています。もう一度ログインしてください。")
+					return
+				}
 				alert("通信エラーが発生しました。もう一度やり直してみてください。")
 			})
 		},
@@ -75,6 +85,11 @@ const app = new Vue({
 			})
 			.catch((err) => {
 				console.log(err)
+				if (err.response.status === 401) {
+					location.href = "/login"
+					alert("ログアウトしています。もう一度ログインしてください。")
+					return
+				}
 				alert("通信エラーが発生しました。もう一度画面を開き直してみてください")
 			})
 		}

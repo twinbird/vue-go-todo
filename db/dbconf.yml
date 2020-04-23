@@ -1,15 +1,15 @@
 
 test:
     driver: postgres
-    open: user=vagrant dbname=todo_app sslmode=disable
+    open: user=root password=root dbname=todo_app sslmode=disable
 
 development:
     driver: postgres
-    open: user=vagrant dbname=todo_app sslmode=disable
+    open: user=root password=root dbname=todo_app sslmode=disable
     
 production:
     driver: postgres
-    open: user=vagrant dbname=todo_app sslmode=disable
+    open: user=root dbname=todo_app sslmode=disable
 
 customimport:
     driver: customdriver

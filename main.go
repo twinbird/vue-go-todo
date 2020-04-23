@@ -42,14 +42,14 @@ func main() {
 
 	// connect to redis
 	var err error
-	sessionStore, err = redistore.NewRediStore(10, "tcp", ":6379", "", []byte(cookieSecretKey))
+	sessionStore, err = redistore.NewRediStore(10, "tcp", "redis:6379", "", []byte(cookieSecretKey))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer sessionStore.Close()
 
 	// connect to postgres
-	db, err = sql.Open("postgres", "user=vagrant dbname=todo_app password=vagrant sslmode=disable")
+	db, err = sql.Open("postgres", "user=root dbname=todo_app password=root sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}

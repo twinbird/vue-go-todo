@@ -1,0 +1,24 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: todo_app
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  app:
+    image: golang
+    tty: true
+    ports:
+      - "80:80"
+    volumes:
+      - ".:/go/src/github.com/twinbird/vue-go-todo/"

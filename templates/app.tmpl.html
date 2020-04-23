@@ -28,10 +28,11 @@
               <input type="radio" v-model="searchState" :value="label.value">{{ labels[label.value] }}
             </label>
           </div>
-          <input type="text" class="form-control form-control-sm col-md-4" placeholder="TODOを検索" v-model="searchQuery">
+          <input type="text" class="form-control form-control-sm col-md-2" placeholder="TODOを検索" v-model="searchQuery">
           <button type="reset" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;">
             <i class="fa fa-times"></i>
           </button>
+          <input type="submit" class="btn btn-sm btn-danger col-md-1 ml-md-3" value="完了を削除">
         </form>
       </div>
 
@@ -39,13 +40,12 @@
 
       <div>
         <form class="form-inline row" @submit.prevent="addTask">
-          <input type="text" class="form-control form-control-sm col-md-4" ref="title" placeholder="TODOを入力">
-          <input type="submit" class="btn btn-sm btn-danger col-md-1" value="完了を削除">
+          <input type="text" class="form-control form-control-sm col-md-4 ml-md-3" ref="title" placeholder="TODOを入力">
         </form>
 
         <br>
 
-        <ul class="list-unstyled">
+        <ul class="list-unstyled ml-md-1">
           <li v-for="task in tasks" v-bind:key="task.id">
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" :id="checkboxId(task.id)" v-model="task.state" @change="updateTask(task)">

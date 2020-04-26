@@ -63,7 +63,7 @@ func main() {
 	if os.Getenv("ENV") == "development" {
 		productionMode = false
 	}
-	postgresURL = os.Getenv("POSTGRES_URL")
+	postgresURL = os.Getenv("DATABASE_URL")
 	redisURL = os.Getenv("REDIS_URL")
 
 	// initialize templates

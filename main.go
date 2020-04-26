@@ -8,10 +8,13 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
+	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/soveran/redisurl"
 	"gopkg.in/boj/redistore.v1"
 )
 
@@ -25,6 +28,8 @@ const (
 	AppPageTemplate    = "app.tmpl.html"
 
 	ContextUserIdKey = "ContextUserIdKey"
+
+	RedisMaxCon = 10
 )
 
 var (
@@ -36,6 +41,17 @@ var (
 	postgresURL     string
 	redisURL        string
 )
+
+func getRediStore(url string) (*redistore.RediStore, error) {
+	if strings.HasPrefix(url, "redis://") {
+		redisPool := redis.NewPool(func() (redis.Conn, error) {
+			return redisurl.ConnectToURL(redisURL)
+		}, RedisMaxCon)
+		return redistore.NewRediStoreWithPool(redisPool, []byte(cookieSecretKey))
+	} else {
+		return redistore.NewRediStore(10, "tcp", redisURL, "", []byte(cookieSecretKey))
+	}
+}
 
 func main() {
 	// get configuration
@@ -55,7 +71,7 @@ func main() {
 
 	// connect to redis
 	var err error
-	sessionStore, err = redistore.NewRediStore(10, "tcp", redisURL, "", []byte(cookieSecretKey))
+	sessionStore, err = getRediStore(redisURL)
 	if err != nil {
 		log.Fatal(err)
 	}

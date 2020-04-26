@@ -28,7 +28,7 @@
               <input type="radio" v-model="searchState" :value="label.value">{{ labels[label.value] }}
             </label>
           </div>
-          <input type="text" class="form-control form-control-sm col-md-2" placeholder="検索" v-model="searchQuery">
+          <input type="text" class="form-control form-control-sm col-md-2" placeholder="検索" v-model="searchQuery" maxlength="100">
           <button type="reset" class="btn bg-transparent" style="margin-left: -40px; z-index: 100;" @click="resetSearchQuery()">
             <i class="fa fa-times"></i>
           </button>
@@ -40,7 +40,7 @@
 
       <div>
         <form class="form-inline row" @submit.prevent="addTask">
-          <input type="text" class="form-control form-control-sm col-md-4 ml-md-3" ref="title" placeholder="TODOを入力">
+          <input type="text" class="form-control form-control-sm col-md-4 ml-md-3" ref="title" placeholder="TODOを入力" maxlength="100">
         </form>
 
         <br>

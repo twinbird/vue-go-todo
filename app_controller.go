@@ -70,6 +70,11 @@ func taskPostHandler(w http.ResponseWriter, r *http.Request) {
 	user_id := r.Context().Value(ContextUserIdKey).(int)
 
 	title := r.FormValue("title")
+	if len(title) > 100 {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, "titleは100文字以内にしてください。", http.StatusBadRequest)
+		return
+	}
 	t := &Task{Title: title, UserId: user_id, CreatedAt: time.Now()}
 	err := t.Create()
 	if err != nil {

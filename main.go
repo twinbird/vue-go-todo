@@ -33,29 +33,36 @@ var (
 	productionMode  bool
 	db              *sql.DB
 	viewTemplates   map[string]*template.Template
+	postgresURL     string
+	redisURL        string
 )
 
 func main() {
 	// get configuration
 	port := os.Getenv("PORT")
-	cookieSecretKey = []byte(os.Getenv("SECRET_KEY"))
-	if os.Getenv("ENV") == "production" {
-		productionMode = true
+	if port == "" {
+		port = "80"
 	}
+	cookieSecretKey = []byte(os.Getenv("SECRET_KEY"))
+	if os.Getenv("ENV") == "development" {
+		productionMode = false
+	}
+	postgresURL = os.Getenv("POSTGRES_URL")
+	redisURL = os.Getenv("REDIS_URL")
 
 	// initialize templates
 	initTemplate()
 
 	// connect to redis
 	var err error
-	sessionStore, err = redistore.NewRediStore(10, "tcp", "redis:6379", "", []byte(cookieSecretKey))
+	sessionStore, err = redistore.NewRediStore(10, "tcp", redisURL, "", []byte(cookieSecretKey))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer sessionStore.Close()
 
 	// connect to postgres
-	db, err = sql.Open("postgres", "host=postgres user=root dbname=todo_app password=root sslmode=disable")
+	db, err = sql.Open("postgres", postgresURL)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -12,11 +12,11 @@ vue-go-todo:
 
 dev:
 	go build
-	PORT=80 SECRET_KEY=asdf7q97tgpdr9y8t4990 ./vue-go-todo
+	ENV=development SECRET_KEY=asdf7q97tgpdr9y8t4990 POSTGRES_URL="host=postgres user=root dbname=todo_app password=root sslmode=disable" REDIS_URL="redis:6379" ./vue-go-todo
 
 run:
 	go build
-	PORT=80 ENV=production SECRET_KEY=asdf7q97tgpdr9y8t4990 ./vue-go-todo
+	SECRET_KEY=asdf7q97tgpdr9y8t4990 POSTGRES_URL="host=postgres user=root dbname=todo_app password=root sslmode=disable" REDIS_URL="redis:6379" ./vue-go-todo
 
 clean:
 	go clean
